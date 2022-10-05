@@ -1,4 +1,5 @@
-﻿using RockGym.Models;
+﻿using RockGym.Database;
+using RockGym.Models;
 
 namespace RockGym.Repositories
 {
@@ -12,6 +13,13 @@ namespace RockGym.Repositories
     }
     public class SubscriptionRepository : ISubscriptionRepository
     {
+        private readonly RockDbContext _dbContext;
+
+        public SubscriptionRepository(RockDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public Task<Subscription> Create(Subscription subscription)
         {
             throw new NotImplementedException();
