@@ -1,4 +1,5 @@
-﻿using RockGym.Models;
+﻿using RockGym.Database;
+using RockGym.Models;
 
 namespace RockGym.Repositories
 {
@@ -12,6 +13,13 @@ namespace RockGym.Repositories
     }
     public class GroupTrainingRepository : IGroupTrainingRepository
     {
+        private readonly RockDbContext _dbContext;
+
+        public GroupTrainingRepository(RockDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public Task<GroupTraining> Create(GroupTraining groupTraining)
         {
             throw new NotImplementedException();
