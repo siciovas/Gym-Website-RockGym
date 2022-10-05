@@ -23,7 +23,7 @@ Registruotas sistemos naudotojas galės:
 Administratorius sistemoje galės:
 -	  Tvarkyti grupinių treniruočių žmonių skaičių
 
-##2.	Sistemos architektūra
+## 2.	Sistemos architektūra
 
 Sistemos sudedamosios dalys:
 •	Kliento pusė – React. js TypeScript;
