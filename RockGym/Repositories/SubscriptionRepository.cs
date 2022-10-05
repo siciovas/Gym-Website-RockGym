@@ -1,4 +1,5 @@
-﻿using RockGym.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using RockGym.Database;
 using RockGym.Models;
 
 namespace RockGym.Repositories
@@ -9,7 +10,7 @@ namespace RockGym.Repositories
         Task<Subscription> Create(Subscription subscription);
         Task<Subscription> Get(int Id);
         Task<Subscription> Update(Subscription subscription);
-        Task Delete(int Id);
+        Task Delete(Subscription subscription);
     }
     public class SubscriptionRepository : ISubscriptionRepository
     {
@@ -20,29 +21,36 @@ namespace RockGym.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<Subscription> Create(Subscription subscription)
+        public async Task<Subscription> Create(Subscription subscription)
         {
-            throw new NotImplementedException();
+            _dbContext.Add(subscription);
+            await _dbContext.SaveChangesAsync();
+
+            return subscription;
         }
 
-        public Task Delete(int Id)
+        public async Task Delete(Subscription subscription)
         {
-            throw new NotImplementedException();
+            _dbContext.Subscriptions.Remove(subscription);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task<List<Subscription>> GeAll()
+        public async Task<List<Subscription>> GeAll()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Subscriptions.ToListAsync();
         }
 
-        public Task<Subscription> Get(int Id)
+        public async Task<Subscription> Get(int Id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Subscriptions.FirstOrDefaultAsync(subscription => subscription.Id == Id);
         }
 
-        public Task<Subscription> Update(Subscription subscription)
+        public async Task<Subscription> Update(Subscription subscription)
         {
-            throw new NotImplementedException();
+            _dbContext.Subscriptions.Update(subscription);
+            await _dbContext.SaveChangesAsync();
+
+            return subscription;
         }
     }
 }

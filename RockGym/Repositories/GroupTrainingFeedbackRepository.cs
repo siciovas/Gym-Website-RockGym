@@ -1,4 +1,5 @@
-﻿using RockGym.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using RockGym.Database;
 using RockGym.Models;
 
 namespace RockGym.Repositories
@@ -20,29 +21,36 @@ namespace RockGym.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<GroupTrainingFeedback> Create(GroupTrainingFeedback groupTrainingFeedback)
+        public async Task<GroupTrainingFeedback> Create(GroupTrainingFeedback groupTrainingFeedback)
         {
-            throw new NotImplementedException();
+            _dbContext.Add(groupTrainingFeedback);
+            await _dbContext.SaveChangesAsync();
+
+            return groupTrainingFeedback;
         }
 
-        public Task Delete(GroupTrainingFeedback groupTrainingFeedback)
+        public async Task Delete(GroupTrainingFeedback groupTrainingFeedback)
         {
-            throw new NotImplementedException();
+            _dbContext.GroupTrainingFeedbacks.Remove(groupTrainingFeedback);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task<GroupTrainingFeedback> Get(int Id)
+        public async Task<GroupTrainingFeedback> Get(int Id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.GroupTrainingFeedbacks.FirstOrDefaultAsync(feedback => feedback.Id == Id);
         }
 
-        public Task<List<GroupTrainingFeedback>> GetAll(int groupTrainingId)
+        public async Task<List<GroupTrainingFeedback>> GetAll(int groupTrainingId)
         {
-            throw new NotImplementedException();
+           return await _dbContext.GroupTrainingFeedbacks.Where(feedback => feedback.GroupTrainingId == groupTrainingId).ToListAsync();
         }
 
-        public Task<GroupTrainingFeedback> Update(GroupTrainingFeedback groupTrainingFeedback)
+        public async Task<GroupTrainingFeedback> Update(GroupTrainingFeedback groupTrainingFeedback)
         {
-            throw new NotImplementedException();
+            _dbContext.GroupTrainingFeedbacks.Update(groupTrainingFeedback);
+            await _dbContext.SaveChangesAsync();
+
+            return groupTrainingFeedback;
         }
     }
 }
