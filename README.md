@@ -26,7 +26,7 @@ Administratorius sistemoje galės:
 ## 2.	Sistemos architektūra
 
 Sistemos sudedamosios dalys:
-•	Kliento pusė – React. js TypeScript;
-•	Serverio pusė – C# .NET Core 6;
-•	Duomenų bazė – MySQL;
+-	  Kliento pusė – React. js TypeScript;
+-	  Serverio pusė – C# .NET Core 6;
+- 	Duomenų bazė – MySQL;
 
