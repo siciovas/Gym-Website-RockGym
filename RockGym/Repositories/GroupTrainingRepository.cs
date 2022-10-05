@@ -1,4 +1,5 @@
-﻿using RockGym.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using RockGym.Database;
 using RockGym.Models;
 
 namespace RockGym.Repositories
@@ -9,7 +10,7 @@ namespace RockGym.Repositories
         Task<GroupTraining> Create(GroupTraining groupTraining);
         Task<GroupTraining> Get(int Id);
         Task<GroupTraining> Update(GroupTraining groupTraining);
-        Task Delete(int Id);
+        Task Delete(GroupTraining groupTraining);
     }
     public class GroupTrainingRepository : IGroupTrainingRepository
     {
@@ -20,29 +21,36 @@ namespace RockGym.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<GroupTraining> Create(GroupTraining groupTraining)
+        public async Task<GroupTraining> Create(GroupTraining groupTraining)
         {
-            throw new NotImplementedException();
+            _dbContext.Add(groupTraining);
+            await _dbContext.SaveChangesAsync();
+
+            return groupTraining;
         }
 
-        public Task Delete(int Id)
+        public async Task Delete(GroupTraining groupTraining)
         {
-            throw new NotImplementedException();
+            _dbContext.GroupTrainings.Remove(groupTraining);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task<GroupTraining> Get(int Id)
+        public async Task<GroupTraining> Get(int Id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.GroupTrainings.FirstOrDefaultAsync(training => training.Id == Id);
         }
 
-        public Task<List<GroupTraining>> GetAll(int subscriptionId)
+        public async Task<List<GroupTraining>> GetAll(int subscriptionId)
         {
-            throw new NotImplementedException();
+            return await _dbContext.GroupTrainings.Where(training => training.SubscriptionId == subscriptionId).ToListAsync();
         }
 
-        public Task<GroupTraining> Update(GroupTraining groupTraining)
+        public async Task<GroupTraining> Update(GroupTraining groupTraining)
         {
-            throw new NotImplementedException();
+            _dbContext.GroupTrainings.Update(groupTraining);
+            await _dbContext.SaveChangesAsync();
+
+            return groupTraining;
         }
     }
 }
