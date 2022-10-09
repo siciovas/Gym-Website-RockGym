@@ -6,7 +6,7 @@ namespace RockGym.Repositories
 {
     public interface ISubscriptionRepository
     {
-        Task<List<Subscription>> GeAll();
+        Task<List<Subscription>> GetAll();
         Task<Subscription> Create(Subscription subscription);
         Task<Subscription> Get(int Id);
         Task<Subscription> Update(Subscription subscription);
@@ -35,7 +35,7 @@ namespace RockGym.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Subscription>> GeAll()
+        public async Task<List<Subscription>> GetAll()
         {
             return await _dbContext.Subscriptions.ToListAsync();
         }
