@@ -1,9 +1,35 @@
+using Microsoft.EntityFrameworkCore;
+using RockGym.Controllers;
+using RockGym.Database;
+using RockGym.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<RockDbContext>(options =>
+{
+    var connetionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseMySql(connetionString, ServerVersion.AutoDetect(connetionString));
+});
+builder.Services.AddScoped<SubscriptionController>();
+builder.Services.AddScoped<GroupTrainingController>();
+builder.Services.AddScoped<GroupTrainingFeedbackController>();
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+builder.Services.AddScoped<IGroupTrainingRepository, GroupTrainingRepository>();
+builder.Services.AddScoped<IGroupTrainingFeedbackRepository, GroupTrainingFeedbackRepository>();
+
+
+
 var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -17,6 +43,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.MapControllers();
 
 app.UseAuthorization();
 
