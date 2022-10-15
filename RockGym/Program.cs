@@ -1,3 +1,6 @@
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.EntityFrameworkCore;
 using RockGym.Controllers;
 using RockGym.Database;
@@ -12,11 +15,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Configuration.AddAzureKeyVault(new SecretClient(new Uri(builder.Configuration.GetValue<string>("KeyVaultUri")), new DefaultAzureCredential()), new KeyVaultSecretManager());
 builder.Services.AddDbContext<RockDbContext>(options =>
 {
-    var connetionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseMySql(connetionString, ServerVersion.AutoDetect(connetionString));
+    options.UseSqlServer(builder.Configuration.GetSection("rockgym").Value.ToString());
 });
 builder.Services.AddScoped<SubscriptionController>();
 builder.Services.AddScoped<GroupTrainingController>();
