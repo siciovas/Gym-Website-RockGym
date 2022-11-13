@@ -1,6 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RockGym.Models;
+using RockGym.Models.Auth;
+using RockGym.Models.Dto;
+using RockGym.Models.Dto.Post;
 using RockGym.Repositories;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace RockGym.Controllers
 {
@@ -11,16 +17,19 @@ namespace RockGym.Controllers
         private readonly ISubscriptionRepository _subscription;
         private readonly IGroupTrainingRepository _groupTraining;
         private readonly IGroupTrainingFeedbackRepository _groupTrainingFeedback;
+        private readonly IAuthorizationService _authorizationService;
 
-        public GroupTrainingFeedbackController(ISubscriptionRepository subscription, IGroupTrainingRepository groupTraining, IGroupTrainingFeedbackRepository groupTrainingFeedback)
+        public GroupTrainingFeedbackController(ISubscriptionRepository subscription, IGroupTrainingRepository groupTraining, IGroupTrainingFeedbackRepository groupTrainingFeedback, IAuthorizationService authorizationService)
         {
             _subscription = subscription;
             _groupTraining = groupTraining;
             _groupTrainingFeedback = groupTrainingFeedback;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GroupTrainingFeedback>>> GetAll(int subscriptionId, int grouptrainingId)
+        [Authorize(Roles = Roles.RegisteredUser)]
+        public async Task<ActionResult<IEnumerable<GroupTrainingFeedbackDto>>> GetAll(int subscriptionId, int grouptrainingId)
         {
             var subscription = await _subscription.Get(subscriptionId);
             if (subscription == null)
@@ -30,61 +39,87 @@ namespace RockGym.Controllers
             if (training == null)
                 return NotFound();
 
-            var feedback = await _groupTrainingFeedback.GetAll(grouptrainingId);
+            var feedbacks = await _groupTrainingFeedback.GetAll(grouptrainingId);
 
-            return Ok(feedback);
+            return Ok(feedbacks.Select(feedback => new GroupTrainingFeedbackDto
+            {
+                Id = feedback.Id,
+                Feedback = feedback.Feedback
+            }));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GroupTrainingFeedback>> Get(int subscriptionId, int grouptrainingId, int id)
+        [Authorize(Roles = Roles.RegisteredUser)]
+        public async Task<ActionResult<GroupTrainingFeedbackDto>> Get(int subscriptionId, int grouptrainingId, int id)
         {
             var subscription = await _subscription.Get(subscriptionId);
-            if (subscription == null)
-                return NotFound();
+            if (subscription == null) return NotFound();
 
             var training = await _groupTraining.Get(grouptrainingId);
-            if (training == null)
-                return NotFound();
+            if (training == null) return NotFound();
 
             var feedback = await _groupTrainingFeedback.Get(id);
 
-            return Ok(feedback);
+            return Ok(new GroupTrainingFeedbackDto
+            {
+                Id = feedback.Id,
+                Feedback = feedback.Feedback
+            });
         }
         
         [HttpPost]
-        public async Task<ActionResult<GroupTrainingFeedback>> Post(int subscriptionId, int grouptrainingId, GroupTrainingFeedback groupTrainingFeedback)
+        [Authorize(Roles = Roles.RegisteredUser)]
+        public async Task<ActionResult<GroupTrainingFeedbackDto>> Post(int subscriptionId, int grouptrainingId, GroupTrainingFeedbackPostDto groupTrainingFeedbackPostDto)
         {
             var subscription = await _subscription.Get(subscriptionId);
             if (subscription == null)
                 return NotFound();
 
             var training = await _groupTraining.Get(grouptrainingId);
-            if (training == null)
-                return NotFound();
+            if (training == null) return NotFound();
 
-            groupTrainingFeedback.GroupTrainingId = grouptrainingId;
+            var authResult = await _authorizationService.AuthorizeAsync(User, training, PolicyNames.ResourceOwner);
+            if (!authResult.Succeeded)
+            {
+                return Forbid();
+            }
 
-            await _groupTrainingFeedback.Create(groupTrainingFeedback);
+            var newFeedback = new GroupTrainingFeedback
+            {
+                Feedback = groupTrainingFeedbackPostDto.Feedback,
+                GroupTraining = training,
+                UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+            };
 
-            return Created($"api/subscription/{subscriptionId}/grouptraining/{grouptrainingId}/trainingfeedback/{groupTrainingFeedback.Id}", groupTrainingFeedback);
+            await _groupTrainingFeedback.Create(newFeedback);
+
+            return Created($"api/subscription/{subscriptionId}/grouptraining/{grouptrainingId}/trainingfeedback/{newFeedback.Id}", new GroupTrainingFeedbackDto
+            {
+                Id = newFeedback.Id,
+                Feedback = newFeedback.Feedback
+            });
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<GroupTrainingFeedback>> Update(int subscriptionId, int grouptrainingId, GroupTrainingFeedback groupTrainingFeedback, int id)
+        [Authorize(Roles = Roles.RegisteredUser)]
+        public async Task<ActionResult<GroupTrainingFeedbackDto>> Update(int subscriptionId, int grouptrainingId, GroupTrainingFeedbackPostDto groupTrainingFeedbackPostDto, int id)
         {
             var subscription = await _subscription.Get(subscriptionId);
-            if (subscription == null)
-                return NotFound();
+            if (subscription == null) return NotFound();
 
             var training = await _groupTraining.Get(grouptrainingId);
-            if (training == null)
-                return NotFound();
+            if (training == null) return NotFound();
 
             var feedback = await _groupTrainingFeedback.Get(id);
-            if (feedback == null)
-                return NotFound();
+            if (feedback == null) return NotFound();
 
-            feedback.Feedback = groupTrainingFeedback.Feedback;
+            var authResult = await _authorizationService.AuthorizeAsync(User, feedback, PolicyNames.ResourceOwner);
+            if (!authResult.Succeeded)
+            {
+                return Forbid();
+            }
+
+            feedback.Feedback = groupTrainingFeedbackPostDto.Feedback;
 
             await _groupTrainingFeedback.Update(feedback);
 
@@ -92,6 +127,7 @@ namespace RockGym.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Roles.RegisteredUser)]
         public async Task<ActionResult<GroupTrainingFeedback>> Delete(int subscriptionId, int grouptrainingId, int id)
         {
             var subscription = await _subscription.Get(subscriptionId);
@@ -105,6 +141,12 @@ namespace RockGym.Controllers
             var feedback = await _groupTrainingFeedback.Get(id);
             if (feedback == null)
                 return NotFound();
+
+            var authResult = await _authorizationService.AuthorizeAsync(User, feedback, PolicyNames.ResourceOwner);
+            if (!authResult.Succeeded)
+            {
+                return Forbid();
+            }
 
             await _groupTrainingFeedback.Delete(feedback);
 

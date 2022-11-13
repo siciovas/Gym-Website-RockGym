@@ -42,7 +42,7 @@ namespace RockGym.Repositories
 
         public async Task<List<GroupTrainingFeedback>> GetAll(int groupTrainingId)
         {
-           return await _dbContext.GroupTrainingFeedbacks.Where(feedback => feedback.GroupTrainingId == groupTrainingId).ToListAsync();
+            return await _dbContext.GroupTrainingFeedbacks.Where(feedback => feedback.GroupTraining.Id == groupTrainingId).ToListAsync();
         }
 
         public async Task<GroupTrainingFeedback> Update(GroupTrainingFeedback groupTrainingFeedback)

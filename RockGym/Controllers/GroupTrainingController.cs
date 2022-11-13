@@ -1,6 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RockGym.Models;
+using RockGym.Models.Auth;
+using RockGym.Models.Dto;
+using RockGym.Models.Dto.Post;
+using RockGym.Models.Dto.Update;
 using RockGym.Repositories;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace RockGym.Controllers
 {
@@ -10,81 +17,134 @@ namespace RockGym.Controllers
     {
         private readonly ISubscriptionRepository _subscriptions;
         private readonly IGroupTrainingRepository _groupTrainings;
+        private readonly IAuthorizationService _authorizationService;
 
-        public GroupTrainingController(IGroupTrainingRepository groupTraining, ISubscriptionRepository subscriptions)
+
+        public GroupTrainingController(IGroupTrainingRepository groupTraining, ISubscriptionRepository subscriptions, IAuthorizationService authorizationService)
         {
             _groupTrainings = groupTraining;
             _subscriptions = subscriptions;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GroupTraining>>> GetAll(int subscriptionId)
+        [Authorize(Roles = Roles.RegisteredUser)]
+        public async Task<ActionResult<IEnumerable<GroupTrainingDto>>> GetAll(int subscriptionId)
         {
             var sub = await _subscriptions.Get(subscriptionId);
+            if (sub == null) return NotFound();
 
-            if (sub == null)
-                return NotFound();
+            var trainings = await _groupTrainings.GetAll(subscriptionId);
 
-            return await _groupTrainings.GetAll(subscriptionId);
+            return Ok(trainings.Select(training => new GroupTrainingDto
+            {
+                Id = training.Id,
+                Name = training.Name,
+                Starts = training.Starts,
+                Duration = training.Duration,
+                TrainerName = training.TrainerName,
+                TrainerSurname = training.TrainerSurname,
+                TrainerYear = training.TrainerYear
+            }));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GroupTraining>> Get(int id, int subscriptionId)
+        [Authorize(Roles = Roles.RegisteredUser)]
+        public async Task<ActionResult<GroupTrainingDto>> Get(int id, int subscriptionId)
         {
             var sub = await _subscriptions.Get(subscriptionId);
-            if (sub == null)
-                return NotFound();
+            if (sub == null) return NotFound();
 
             var groupTraining = await _groupTrainings.Get(id);
+            if (groupTraining == null) return NotFound();
+
+            var authResult = await _authorizationService.AuthorizeAsync(User, groupTraining, PolicyNames.ResourceOwner);
+            if (!authResult.Succeeded)
+            {
+                return Forbid();
+            }
 
 
-            return Ok(groupTraining);
+            return Ok(new GroupTrainingDto
+            {
+                Id = groupTraining.Id,
+                Name = groupTraining.Name,
+                Starts = groupTraining.Starts,
+                Duration = groupTraining.Duration,
+                TrainerName = groupTraining.TrainerName,
+                TrainerSurname = groupTraining.TrainerSurname,
+                TrainerYear = groupTraining.TrainerYear
+
+            });
         }
 
         [HttpPost]
-        public async Task<ActionResult<GroupTraining>> Post(GroupTraining groupTraining, int subscriptionId)
+        [Authorize(Roles = Roles.AdminUser)]
+        public async Task<ActionResult<GroupTrainingDto>> Post(GroupTrainingPostDto groupTrainingDto, int subscriptionId)
         {
             var subscription = await _subscriptions.Get(subscriptionId);
-            if (subscription == null)
-                return NotFound();
+            if (subscription == null) return NotFound();
 
-            groupTraining.SubscriptionId = subscriptionId;
+            var training = new GroupTraining
+            {
+                Name = groupTrainingDto.Name,
+                Starts = groupTrainingDto.Starts,
+                Duration = groupTrainingDto.Duration,
+                TrainerName = groupTrainingDto.TrainerName,
+                TrainerSurname = groupTrainingDto.TrainerSurname,
+                TrainerYear = groupTrainingDto.TrainerYear,
+                UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub),
+                Subscription = subscription
+            };
 
-            await _groupTrainings.Create(groupTraining);
+            await _groupTrainings.Create(training);
 
-            return Created($"/api/subscription/{subscriptionId}/grouptraining{groupTraining.Id}", groupTraining);
+            return Created($"/api/subscription/{subscriptionId}/grouptraining{training.Id}", new GroupTrainingDto
+            {
+                Id = training.Id,
+                Name = training.Name,
+                Starts = training.Starts,
+                Duration = training.Duration,
+                TrainerName = training.TrainerName,
+                TrainerSurname = training.TrainerSurname,
+                TrainerYear = training.TrainerYear
+            });
         }
 
         [HttpPut("id")]
-        public async Task<ActionResult<GroupTraining>> Update(GroupTraining groupTraining, int id, int subscriptionId)
+        [Authorize(Roles = Roles.AdminUser)]
+        public async Task<ActionResult<GroupTrainingDto>> Update(GroupTrainingUpdateDto groupTrainingDto, int id, int subscriptionId)
         {
-            var _subscription = await _groupTrainings.Get(subscriptionId);
-            if(_subscription == null)
+            var sub = await _groupTrainings.Get(subscriptionId);
+            if(sub == null)
               return NotFound();
 
 
-            var _groupTraining = await _groupTrainings.Get(id);
-            if (_groupTraining == null)
+            var training = await _groupTrainings.Get(id);
+            if (training == null)
                 return NotFound();
 
-            _groupTraining.Name = groupTraining.Name;
-            _groupTraining.Time = groupTraining.Time;
-            _groupTraining.Duration = groupTraining.Duration;
-            _groupTraining.TrainerName = groupTraining.TrainerName;
-            _groupTraining.TrainerSurname = groupTraining.TrainerSurname;
-            _groupTraining.TrainerYear = groupTraining.TrainerYear;
+            training.Name = groupTrainingDto.Name;
+            training.Starts = groupTrainingDto.Starts;
+            training.Duration = groupTrainingDto.Duration;
+            training.TrainerName = groupTrainingDto.TrainerName;
+            training.TrainerSurname = groupTrainingDto.TrainerSurname;
+            training.TrainerYear = groupTrainingDto.TrainerYear;
 
-            await _groupTrainings.Update(_groupTraining);
+            await _groupTrainings.Update(training);
 
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<GroupTraining>> Delete(int id)
+        [Authorize(Roles = Roles.AdminUser)]
+        public async Task<ActionResult<GroupTraining>> Delete(int id, int subscriptionId)
         {
+            var sub = await _subscriptions.Get(subscriptionId);
+            if (sub == null) return NotFound();
+            
             var training = await _groupTrainings.Get(id);
-            if (training == null)
-                return NotFound();
+            if (training == null) return NotFound();
 
             await _groupTrainings.Delete(training);
 

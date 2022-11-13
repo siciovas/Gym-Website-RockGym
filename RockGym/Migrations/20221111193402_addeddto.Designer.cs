@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RockGym.Database;
 
@@ -11,9 +12,10 @@ using RockGym.Database;
 namespace RockGym.Migrations
 {
     [DbContext(typeof(RockDbContext))]
-    partial class RockDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221111193402_addeddto")]
+    partial class addeddto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,15 +270,9 @@ namespace RockGym.Migrations
                     b.Property<int>("TrainerYear")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SubscriptionId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("GroupTrainings");
                 });
@@ -293,18 +289,12 @@ namespace RockGym.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GroupTrainingId")
+                    b.Property<int>("groupTrainingId")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupTrainingId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("groupTrainingId");
 
                     b.ToTable("GroupTrainingFeedbacks");
                 });
@@ -330,13 +320,7 @@ namespace RockGym.Migrations
                     b.Property<DateTime>("SubscriptionStarts")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Subscriptions");
                 });
@@ -400,45 +384,18 @@ namespace RockGym.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockGym.Models.Auth.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Subscription");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RockGym.Models.GroupTrainingFeedback", b =>
                 {
-                    b.HasOne("RockGym.Models.GroupTraining", "GroupTraining")
+                    b.HasOne("RockGym.Models.GroupTraining", "groupTraining")
                         .WithMany()
-                        .HasForeignKey("GroupTrainingId")
+                        .HasForeignKey("groupTrainingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockGym.Models.Auth.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GroupTraining");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("RockGym.Models.Subscription", b =>
-                {
-                    b.HasOne("RockGym.Models.Auth.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                    b.Navigation("groupTraining");
                 });
 #pragma warning restore 612, 618
         }
