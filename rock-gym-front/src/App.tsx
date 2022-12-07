@@ -8,6 +8,7 @@ import { GroupTrainingsPage } from './Pages/GroupTrainings/GroupTrainingsPage';
 import { LoginPage } from './Pages/Login/LoginPage';
 import { RegistrationPage } from './Pages/Registration/RegistrationPage';
 import { ProfilePage } from './Pages/Profile/ProfilePage';
+import { TrainingFeedbackPage } from './Pages/TrainingFeedback/TrainingFeedbackPage';
 
 
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/subscriptions" element={< SubscriptionsPage />} />
           <Route path="/grouptrainings" element={< GroupTrainingsPage />} />
           <Route path="/profile" element={< ProfilePage />} />
+          <Route path="/gtfeedback" element={ <TrainingFeedbackPage/>} />
         </Routes>
       </BrowserRouter>
     </div>

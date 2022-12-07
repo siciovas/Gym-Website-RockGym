@@ -1,51 +1,67 @@
 import React from "react";
+import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+
 
 const ProfilePage = () => {
-    return (
-        <div className="row g-3">
-            <div className="col-sm-6">
-              <label className="form-label">Vardas</label>
-              <input type="text" className="form-control" id="firstName" placeholder="" value=""/>
-              {/* <div className="invalid-feedback">
-                Valid first name is required.
-              </div> */}
-            </div>
+  return (
+    
+    <div style={{ backgroundImage: `url('${process.env.PUBLIC_URL}/Photos/allpagesbackground.png')` }}>
+      <Container >
+        <Row className="vh-100 d-flex justify-content-center align-items-center">
+          <Col md={8} lg={6} xs={12}>
+            <div className="border border-3 border-dark"></div>
+            <Card className="shadow">
+              <Card.Body>
+                <div className="mb-3 mt-md-4">
+                  <h2 className="fw-bold mb-2 text-uppercase ">Paskyra</h2>
+                  <div className="mb-3">
+                    <Form>
+                    <Form.Group className="mb-3" controlId="formBasicName">
+                        <Form.Label className="text-center">
+                         Vardas
+                        </Form.Label>
+                        <Form.Control type="text"/>
+                      </Form.Group>
+                      <Form.Group className="mb-3" controlId="formBasicSurname">
+                        <Form.Label className="text-center">
+                         Pavardė
+                        </Form.Label>
+                        <Form.Control type="text"/>
+                      </Form.Group>
 
-            <div className="col-sm-6">
-              <label className="form-label">Pavardė</label>
-              <input type="text" className="form-control" id="lastName" placeholder="" value=""/>
-              {/* <div className="invalid-feedback">
-                Valid last name is required.
-              </div> */}
-            </div>
+                     <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label className="text-center">
+                          El. paštas
+                        </Form.Label>
+                        <Form.Control type="email"/>
+                      </Form.Group>
 
-            <div className="col-12">
-              <label className="form-label">Email <span className="text-muted">(Optional)</span></label>
-              <input type="email" className="form-control" id="email" placeholder="you@example.com"/>
-              {/* <div className="invalid-feedback">
-                Please enter a valid email address for shipping updates.
-              </div> */}
-            </div>
-
-            <div className="col-12">
-              <label className="form-label">Address</label>
-              <input type="text" className="form-control" id="address" placeholder="1234 Main St"/>
-              {/* <div className="invalid-feedback">
-                Please enter your shipping address.
-              </div> */}
-            </div>
-
-            <div className="col-md-5">
-              <label className="form-label">Country</label>
-              <select className="form-select" id="country">
-                <option value="">Choose...</option>
-                <option>United States</option>
-              </select>
-              {/* <div className="invalid-feedback">
-                Please select a valid country.
-              </div> */}
-            </div>
-          </div>
-    );
+                      <Form.Group className="mb-3" controlId="formBasicAge">
+                        <Form.Label className="text-center">
+                          Amžius
+                        </Form.Label>
+                        <Form.Control type="number" min="0" step="1"/>
+                      </Form.Group>
+                      <Form.Group className="mb-3" controlId="formBasicPersonalNumber">
+                        <Form.Label className="text-center">
+                          Asmens kodas
+                        </Form.Label>
+                        <Form.Control type="text"/>
+                      </Form.Group>
+                      <div className="d-grid">
+                        <Button variant="dark" type="submit">
+                          Išsaugoti
+                        </Button>
+                      </div>
+                    </Form>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
 };
 export { ProfilePage };

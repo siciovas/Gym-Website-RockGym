@@ -50,7 +50,7 @@ const LoginPage = () => {
                     <div className="mt-3">
                       <p className="mb-0  text-center">
                         Neturite paskyros?{" "}
-                        <a href="{''}" className="text-dark fw-bold">
+                        <a href="/register" className="text-dark fw-bold">
                           Užsiregistruok!
                         </a>
                       </p>
