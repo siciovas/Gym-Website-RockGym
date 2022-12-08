@@ -9,26 +9,29 @@ import { LoginPage } from './Pages/Login/LoginPage';
 import { RegistrationPage } from './Pages/Registration/RegistrationPage';
 import { ProfilePage } from './Pages/Profile/ProfilePage';
 import { TrainingFeedbackPage } from './Pages/TrainingFeedback/TrainingFeedbackPage';
+import { ChakraProvider } from '@chakra-ui/react';
 
 
 
 
 function App() {
   return (
-    <div className="App">
-      <NavigationBar />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={< HomePage />} />
-          <Route path="/login" element={< LoginPage />} />
-          <Route path="/register" element={< RegistrationPage />} />
-          <Route path="/subscriptions" element={< SubscriptionsPage />} />
-          <Route path="/grouptrainings" element={< GroupTrainingsPage />} />
-          <Route path="/profile" element={< ProfilePage />} />
-          <Route path="/gtfeedback" element={ <TrainingFeedbackPage/>} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <ChakraProvider>
+      <div className="App">
+        <NavigationBar />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={< HomePage />} />
+            <Route path="/login" element={< LoginPage />} />
+            <Route path="/register" element={< RegistrationPage />} />
+            <Route path="/subscriptions" element={< SubscriptionsPage />} />
+            <Route path="/grouptrainings" element={< GroupTrainingsPage />} />
+            <Route path="/profile" element={< ProfilePage />} />
+            <Route path="/gtfeedback" element={<TrainingFeedbackPage />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </ChakraProvider>
   );
 }
 

@@ -1,8 +1,58 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent, ReactElement, useState } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
-
+import { useToast } from "@chakra-ui/react";
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+
+  const [email, setEmail] = useState<string>();
+  const [password, setPassword] = useState<string>();
+  
+
+  const onEmailChange = (e: any): void => {
+    setEmail(e.target.value as string);
+  };
+  const onPasswordChange = (e: any): void => {
+    setPassword(e.target.value as string);
+  };
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const Login = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    const data = await fetch("https://rockgym20221015172815.azurewebsites.net/api/login", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    if (data.status === 200) {
+      toast({
+        title: "Prisijungta",
+        status: "success",
+        duration: 5000,
+        position:"top-right",
+        isClosable: true,
+      })
+      navigate("/");
+    } else {
+      toast({
+        title: "Prisijungimas nepavyko",
+        status: "error",
+        duration: 5000,
+        position:"top-right",
+        isClosable: true,
+      })
+    }
+    const token = await data.json();
+    console.log(token);
+  };
+
   return (
     
     <div style={{ backgroundImage: `url('${process.env.PUBLIC_URL}/Photos/allpagesbackground.png')` }}>
@@ -16,12 +66,14 @@ const LoginPage = () => {
                   <h2 className="fw-bold mb-2 text-uppercase ">Rock Gym</h2>
                   <p className=" mb-5">Prisijungti prie paskyros</p>
                   <div className="mb-3">
-                    <Form>
+                    <Form onSubmit={(e) => Login(e)}>
                       <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label className="text-center">
                           El. paštas
                         </Form.Label>
-                        <Form.Control type="email" placeholder="Įveskite el. paštą" />
+                        <Form.Control type="email" required placeholder="Įveskite el. paštą" onChange={(e) => {
+                            onEmailChange(e);
+                          }}/>
                       </Form.Group>
 
                       <Form.Group
@@ -29,7 +81,9 @@ const LoginPage = () => {
                         controlId="formBasicPassword"
                       >
                         <Form.Label>Slaptažodis</Form.Label>
-                        <Form.Control type="password" placeholder="Įveskite slaptažodį" />
+                        <Form.Control type="password" placeholder="Įveskite slaptažodį" required onChange={(e) => {
+                            onPasswordChange(e);
+                          }}/>
                       </Form.Group>
                       <Form.Group
                         className="mb-3"
