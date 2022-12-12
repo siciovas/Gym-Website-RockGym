@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+import jwtDecode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import { ProfileTypes } from "./ProfileTypes";
+
+
+
 
 
 const ProfilePage = () => {
+  const [patientCard, setPatientCard] = useState<ProfileTypes>();
+  const navigate = useNavigate();
+
+
   return (
     
     <div style={{ backgroundImage: `url('${process.env.PUBLIC_URL}/Photos/allpagesbackground.png')` }}>

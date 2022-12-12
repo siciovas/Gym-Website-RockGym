@@ -18,8 +18,8 @@ function App() {
   return (
     <ChakraProvider>
       <div className="App">
-        <NavigationBar />
         <BrowserRouter>
+        <NavigationBar />
           <Routes>
             <Route path="/" element={< HomePage />} />
             <Route path="/login" element={< LoginPage />} />

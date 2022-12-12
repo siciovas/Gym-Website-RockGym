@@ -150,6 +150,5 @@ namespace RockGym.Controllers
 
             return NoContent();
         }
-
     }
 }

@@ -13,6 +13,8 @@ namespace RockGym.Database
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<GroupTraining> GroupTrainings { get; set; }
         public DbSet<GroupTrainingFeedback> GroupTrainingFeedbacks { get; set; }
+        public DbSet<BoughtSubscription> BoughtSubscription { get; set; }
+
 
     }
 }

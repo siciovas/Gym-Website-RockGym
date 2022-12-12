@@ -11,6 +11,7 @@ namespace RockGym.Repositories
         Task<Subscription> Get(int Id);
         Task<Subscription> Update(Subscription subscription);
         Task Delete(Subscription subscription);
+        Task<BoughtSubscription> CreateBought(BoughtSubscription subscription);
     }
     public class SubscriptionRepository : ISubscriptionRepository
     {
@@ -48,6 +49,14 @@ namespace RockGym.Repositories
         public async Task<Subscription> Update(Subscription subscription)
         {
             _dbContext.Subscriptions.Update(subscription);
+            await _dbContext.SaveChangesAsync();
+
+            return subscription;
+        }
+
+        public async Task<BoughtSubscription> CreateBought(BoughtSubscription subscription)
+        {
+            _dbContext.Add(subscription);
             await _dbContext.SaveChangesAsync();
 
             return subscription;
