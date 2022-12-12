@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, ReactElement, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
@@ -40,6 +40,7 @@ const LoginPage = () => {
         isClosable: true,
       })
       navigate("/");
+      window.location.reload();
     } else {
       toast({
         title: "Prisijungimas nepavyko",
@@ -50,6 +51,7 @@ const LoginPage = () => {
       })
     }
     const token = await data.json();
+    localStorage.setItem("accessToken", token.accessToken);
     console.log(token);
   };
 

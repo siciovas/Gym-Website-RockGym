@@ -116,5 +116,35 @@ namespace RockGym.Controllers
 
             return NoContent();
         }
+
+        [HttpPost]
+        [Authorize(Roles = Roles.RegisteredUser)]
+        [Route("/api/boughtsubscription")]
+        public async Task<ActionResult<BoughtSubscriptionDto>> PostBoughtSubscriptions(BoughtSubscriptionDto subscriptionDto)
+        {
+            var subscription = await _subscriptions.Get(subscriptionDto.SubscriptionId);
+            if (subscription == null) return NotFound();
+
+            var newSub = new BoughtSubscription
+            {
+                Name = subscription.Name,
+                Price = subscription.Price,
+                SubscriptionStarts = subscription.SubscriptionStarts,
+                SubscriptionEnds = subscription.SubscriptionEnds,
+                UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub),
+                Subscription = subscription
+            };
+
+            await _subscriptions.CreateBought(newSub);
+
+            return Created($"/api/boughtsubscription/{newSub.Id}", new BoughtSubscriptionDto
+            {
+                Name = newSub.Name,
+                Price = newSub.Price,
+                SubscriptionStarts = newSub.SubscriptionStarts,
+                SubscriptionEnds = newSub.SubscriptionEnds,
+                SubscriptionId = subscription.Id
+            });
+        }
     }
 }

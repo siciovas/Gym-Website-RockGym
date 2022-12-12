@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RockGym.Jwt;
 using RockGym.Models.Auth;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace RockGym.Controllers
 {
@@ -66,6 +68,17 @@ namespace RockGym.Controllers
             var accessToken = _jwtTokenService.CreateAccessToken(user.Email, user.Id.ToString(), roles);
 
             return Ok(new SuccessfulLogin(accessToken));
+        }
+
+        [HttpGet]
+        [Route("roles")]
+        public async Task<ActionResult> GetRoles()
+        {
+            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            return Ok(userRoles);
         }
 
     }
