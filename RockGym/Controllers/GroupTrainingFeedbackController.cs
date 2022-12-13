@@ -78,12 +78,6 @@ namespace RockGym.Controllers
             var training = await _groupTraining.Get(grouptrainingId);
             if (training == null) return NotFound();
 
-            var authResult = await _authorizationService.AuthorizeAsync(User, training, PolicyNames.ResourceOwner);
-            if (!authResult.Succeeded)
-            {
-                return Forbid();
-            }
-
             var newFeedback = new GroupTrainingFeedback
             {
                 Feedback = groupTrainingFeedbackPostDto.Feedback,
