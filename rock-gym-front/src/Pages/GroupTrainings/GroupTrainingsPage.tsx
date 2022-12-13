@@ -78,7 +78,6 @@ const GroupTrainingsPage = () => {
         }
     };
 
-
     return (
         <>
             <div className="d-flex" style={{ backgroundImage: `url('${process.env.PUBLIC_URL}/Photos/allpagesbackground.png')`, height: "100vh" }}>

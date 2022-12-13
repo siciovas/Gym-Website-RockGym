@@ -13,6 +13,7 @@ const NavigationBar = () => {
   const Logout = (e: any): void => {
     e.preventDefault();
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("subscriptionIdOrder");
     navigate("/");
   };
 

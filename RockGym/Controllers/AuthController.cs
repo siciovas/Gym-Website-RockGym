@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RockGym.Jwt;
 using RockGym.Models.Auth;
+using RockGym.Repositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -15,11 +16,13 @@ namespace RockGym.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IJwtTokenService _jwtTokenService;
+        private readonly ISubscriptionRepository _subscriptions;
 
-        public AuthController(UserManager<User> userManager, IJwtTokenService jwtTokenService)
+        public AuthController(UserManager<User> userManager, IJwtTokenService jwtTokenService, ISubscriptionRepository subscriptions)
         {
             _userManager = userManager;
             _jwtTokenService = jwtTokenService;
+            _subscriptions = subscriptions;
         }
 
         [HttpPost]
@@ -66,8 +69,14 @@ namespace RockGym.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
             var accessToken = _jwtTokenService.CreateAccessToken(user.Email, user.Id.ToString(), roles);
+            var subscription = _subscriptions.GetByUserId(user.Id.ToString());
 
-            return Ok(new SuccessfulLogin(accessToken));
+            if (subscription == null)
+            {
+                return Ok(new SuccessfulLogin(accessToken));
+            }
+
+            return Ok(new SuccessfulLogin(accessToken, subscription.Id));
         }
 
         [HttpGet]

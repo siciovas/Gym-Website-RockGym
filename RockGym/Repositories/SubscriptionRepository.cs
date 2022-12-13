@@ -12,6 +12,7 @@ namespace RockGym.Repositories
         Task<Subscription> Update(Subscription subscription);
         Task Delete(Subscription subscription);
         Task<BoughtSubscription> CreateBought(BoughtSubscription subscription);
+        Task<Subscription> GetByUserId(string Id);
     }
     public class SubscriptionRepository : ISubscriptionRepository
     {
@@ -44,6 +45,11 @@ namespace RockGym.Repositories
         public async Task<Subscription> Get(int Id)
         {
             return await _dbContext.Subscriptions.FirstOrDefaultAsync(subscription => subscription.Id == Id);
+        }
+
+        public async Task<Subscription> GetByUserId(string Id)
+        {
+            return await _dbContext.Subscriptions.FirstOrDefaultAsync(subscription => subscription.UserId == Id);
         }
 
         public async Task<Subscription> Update(Subscription subscription)
