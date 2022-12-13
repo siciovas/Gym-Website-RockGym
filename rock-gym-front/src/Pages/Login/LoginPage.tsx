@@ -39,8 +39,10 @@ const LoginPage = () => {
         position:"top-right",
         isClosable: true,
       })
+      const token = await data.json();
+      localStorage.setItem("accessToken", token.accessToken);
+      console.log(token);
       navigate("/");
-      window.location.reload();
     } else {
       toast({
         title: "Prisijungimas nepavyko",
@@ -50,9 +52,7 @@ const LoginPage = () => {
         isClosable: true,
       })
     }
-    const token = await data.json();
-    localStorage.setItem("accessToken", token.accessToken);
-    console.log(token);
+    
   };
 
   return (
