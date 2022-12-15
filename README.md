@@ -1,31 +1,69 @@
 # RockGym
 
-## 1.	Sprendžiamo uždavinio aprašymas
-### 1.1.	Sistemos paskirtis
+## 1. Sprendžiamo uždavinio aprašymas
+### 1.1. Sistemos paskirtis
 
-Sistemos paskirtis – individualios sporto salės abonemento pirkimas bei grupinių treniruočių registracija. Sistemoje egzistuos trys rolės – administratorius, registruotas vartotojas bei svečias. Svečias turės galimybę peržiūrėti abonementų kainas, grupinių treniruočių laikus, grupinių treniruočių tipų pasirinkimus. Registruotas vartotojas galės nusipirkti abonementą, matyti grupinių treniruočių pasirinkimą. Administratorius valdys grupines treniruotes.
-Taikomosios srities objektai yra Abonementas  Grupinė treniruotė  Atsiliepimas
+Sistemos paskirtis – individualios sporto salės abonemento pirkimas bei grupinių treniruočių registracija. Sistemoje egzistuos trys rolės – administratorius, registruotas vartotojas bei svečias. Svečias turės galimybę užsiregistruoti bei prisijungti. Registruotas vartotojas galės nusipirkti abonementą, matyti grupinių treniruočių pasirinkimą. Administratorius valdys abonementus, grupines treniruotes, atsiliepimus ir žmonių paskyras per duomenų bazę.
 
-### 1.2.	Funkciniai reikalavimai
+Taikomosios srities objektai yra:
+ - Abonementas 
+ - Grupinė treniruotė 
+ - Atsiliepimas
+
+### 1.2. Funkciniai reikalavimai
 
 Neregistruotas sistemos vartotojas galės:
 -	  Užsiregistruoti sistemoje
--	  Peržiūrėti abonementų tipus bei jų kainas
--	  Peržiūrėti grupinių treniruočių tipus bei jų laiką
--	  
+
 Registruotas sistemos naudotojas galės:
 -	  Prisijungti į sistemą
 -	  Nusipirkti abonementą
--	  Užsiregistruoti grupinei treniruotei
--	  Atšaukti savo abonementą
--	  Parašyti atsiliepimą apie treniruotę
--	  
-Administratorius sistemoje galės:
--	  Tvarkyti grupinių treniruočių žmonių skaičių
+-	  Peržiūrėti grupines treniruotes
+-	  Parašyti anonimišką atsiliepimą apie treniruotę
+-	  Peržiūrėti atsiliepimus apie treniruotes  
 
-## 2.	Sistemos architektūra
+Administratorius sistemoje galės:
+-	  Tvarkyti abonementus, grupines treniruotes, atsiliepimus ir žmonių paskyras per duomenų bazę
+
+## 2. Sistemos architektūra
 
 Sistemos sudedamosios dalys:
--	  Kliento pusė – React. js TypeScript;
+-	  Kliento pusė – React TypeScript;
 -	  Serverio pusė – C# .NET Core 6;
-- 	Duomenų bazė – MySQL;
+- 	  Duomenų bazė – SQL Server Management Studio;
+
+
+## 3. UML Deployment
+
+![image](https://user-images.githubusercontent.com/90570865/207895637-14a7d77a-4861-480c-84d3-a6761afb7a6a.png)
+
+## 4. Vartotojo sąsaja
+
+##### Pagrindinis puslapis (pries prisijungimą)
+![image](https://user-images.githubusercontent.com/90570865/207896996-09eab801-e73b-4173-8a87-3c4dd30edde3.png)
+
+##### Prisijungimas
+![image](https://user-images.githubusercontent.com/90570865/207897246-76ce21b6-c3fd-4a07-8bde-5137e7bc02ab.png)
+
+##### Registracija
+![image](https://user-images.githubusercontent.com/90570865/207897422-0ea8df3e-9c7b-4c6a-aebf-c0a0a0745982.png)
+
+##### Pagrndinis puslapis (po prisijungimo)
+![image](https://user-images.githubusercontent.com/90570865/207898033-314cbc84-5880-40ee-80be-2e6076be79fe.png)
+
+##### Abonementai
+![image](https://user-images.githubusercontent.com/90570865/207898194-bff86d10-54e3-456f-96bd-672854ed4d58.png)
+
+##### Grupinės treniruotės
+![image](https://user-images.githubusercontent.com/90570865/207898381-57c2f6ac-6a7d-477b-aa11-5d376e65fad4.png)
+
+##### Atsiliepimo rašymas
+![image](https://user-images.githubusercontent.com/90570865/207898588-f184c1c0-75a5-4b8b-8e4f-4a3e88d7e190.png)
+
+##### Atsiliepimų peržiūra
+![image](https://user-images.githubusercontent.com/90570865/207898750-3b8f515f-0d0f-43a1-8776-0107592eba41.png)
+
+##### Atsijungimas
+![image](https://user-images.githubusercontent.com/90570865/207898941-7349e097-ff42-4cf7-a269-5ae3a5afc10f.png)
+
+## 5. API
