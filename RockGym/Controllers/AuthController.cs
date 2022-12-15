@@ -69,14 +69,9 @@ namespace RockGym.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
             var accessToken = _jwtTokenService.CreateAccessToken(user.Email, user.Id.ToString(), roles);
-            var subscription = _subscriptions.GetByUserId(user.Id.ToString());
+            var subId = await _subscriptions.GetByUserId(user.Id.ToString());
 
-            if (subscription == null)
-            {
-                return Ok(new SuccessfulLogin(accessToken));
-            }
-
-            return Ok(new SuccessfulLogin(accessToken, subscription.Id));
+            return Ok(new SuccessfulLogin(accessToken, subId));
         }
 
         [HttpGet]

@@ -59,7 +59,16 @@ builder.Services.AddAuthentication(configureOptions: options =>
         options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]));
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+app.UseCors();
 app.UseSwagger();
 app.UseSwaggerUI();
 
