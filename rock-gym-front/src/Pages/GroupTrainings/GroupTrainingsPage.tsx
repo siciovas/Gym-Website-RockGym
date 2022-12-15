@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Container, Card, Button, Form } from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams  } from 'react-router-dom';
 import { useToast } from "@chakra-ui/react";
 import { GroupTrainingTypes } from './GroupTrainingTypes';
 
@@ -10,6 +10,7 @@ import { GroupTrainingTypes } from './GroupTrainingTypes';
 const GroupTrainingsPage = () => {
     const [show, setShow] = useState(false);
     const [trainingId, setTrainingId] = useState<number>();
+
     const handleClose = () => setShow(false);
     const handleShow = (id: number):void => {
         setTrainingId(id);
@@ -17,7 +18,13 @@ const GroupTrainingsPage = () => {
     }
     const navigate = useNavigate();
     const NavigateToAllFeedbacks = () => {
-        navigate('/gtfeedback')
+        navigate({
+            pathname: '/gtfeedback',
+            search: `?trainingId=${trainingId}`,
+          });
+        // navigate('/gtfeedback');
+        // searchBarParams.set("trainingId", trainingId as unknown as string);
+        // setSearchBarParams(searchBarParams);
     };
     const toast = useToast();
     const [allTrainings, setAllTrainings] = useState<GroupTrainingTypes[]>([]);

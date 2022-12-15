@@ -12,7 +12,7 @@ namespace RockGym.Repositories
         Task<Subscription> Update(Subscription subscription);
         Task Delete(Subscription subscription);
         Task<BoughtSubscription> CreateBought(BoughtSubscription subscription);
-        Task<Subscription> GetByUserId(string Id);
+        Task<int> GetByUserId(string Id);
     }
     public class SubscriptionRepository : ISubscriptionRepository
     {
@@ -47,9 +47,9 @@ namespace RockGym.Repositories
             return await _dbContext.Subscriptions.FirstOrDefaultAsync(subscription => subscription.Id == Id);
         }
 
-        public async Task<Subscription> GetByUserId(string Id)
+        public async Task<int> GetByUserId(string Id)
         {
-            return await _dbContext.Subscriptions.FirstOrDefaultAsync(subscription => subscription.UserId == Id);
+            return await _dbContext.BoughtSubscription.Where(boughtSubscription => boughtSubscription.UserId == Id).Select(x => x.Subscription.Id).FirstOrDefaultAsync();
         }
 
         public async Task<Subscription> Update(Subscription subscription)

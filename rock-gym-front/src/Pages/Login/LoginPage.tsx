@@ -41,7 +41,10 @@ const LoginPage = () => {
       })
       const token = await data.json();
       localStorage.setItem("accessToken", token.accessToken);
-      console.log(token);
+      if (token.subId > 0)
+      {
+        localStorage.setItem("subscriptionIdOrder", token.subId);
+      }
       navigate("/");
     } else {
       toast({
