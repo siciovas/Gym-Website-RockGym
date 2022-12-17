@@ -68,7 +68,7 @@ Sistemos sudedamosios dalys:
 
 ## 5. API
 
-#### Subscription
+### Subscription
 **GET** /api/subscription - skirtas gauti visus abonementus 
 
 **POST** /api/subscription - skirtas įrašyti naują abonementą
@@ -81,7 +81,7 @@ Sistemos sudedamosios dalys:
 
 **POST** /api/boughtsubscription - skirtas įrašyti informaciją apie nusipirktą abonementą
 
-#### Group Training
+### Group Training
 **GET** /api/subscription/{subscriptionId}/grouptraining - skirtas gauti visas grupines treniruotes, kurie priklauso unikaliams abonementui
 
 **POST** /api/subscription/{subscriptionId}/grouptraining - skirtas įrašyti naują grupinę treniruotę į tam tikrą abonementą
@@ -92,7 +92,7 @@ Sistemos sudedamosios dalys:
 
 **DELETE** /api/subscription/{subscriptionId}/grouptraining/{id} - skirtas ištrinti grupinę treniruotę pagal unikalų ID
 
-#### Group Training Feedback
+### Group Training Feedback
 **GET** /api/subscription/{subscriptionId}/grouptraining/{grouptrainingId}/grouptrainingfeedback - skirtas gauti unikalios treniruotės atsiliepimus
 
 **POST** /api/subscription/{subscriptionId}/grouptraining/{grouptrainingId}/grouptrainingfeedback - skirtas įrašyti naują naują atsiliepimą unikalios treniruotės
@@ -103,7 +103,7 @@ Sistemos sudedamosios dalys:
 
 **DELETE** /api/subscription/{subscriptionId}/grouptraining//{grouptrainingId}/grouptrainingfeedback/{id} - skirtas ištrinti unikalios grupinės treniruotės unikalų atsiliepimą
 
-#### Auth
+### Auth
 **POST** /api/register - skirtas įrašyti naujos paskyros informaciją
 
 **POST** /api/login - skirtas vartotojo prisijungimui
