@@ -67,3 +67,29 @@ Sistemos sudedamosios dalys:
 ![image](https://user-images.githubusercontent.com/90570865/207898941-7349e097-ff42-4cf7-a269-5ae3a5afc10f.png)
 
 ## 5. API
+
+#### Subscription
+**GET** /api/subscription - skirtas gauti visus abonementus
+**POST** /api/subscription - skirtas įrašyti naują abonementą
+**GET** /api/subscription/{id} - skirtas gauti unikalų abonementą pagal ID
+**PUT** /api/subscription/{id} - skirtas atnaujinti unikalaus abonemento informaciją pagal ID
+**DELETE** /api/subscription/{id} - skirtas ištrinti abonementą pagal unikalų ID
+**POST** /api/boughtsubscription - skirtas įrašyti informaciją apie nusipirktą abonementą
+
+#### Group Training
+**GET** /api/subscription/{subscriptionId}/grouptraining - skirtas gauti visas grupines treniruotes, kurie priklauso unikaliams abonementui
+**POST** /api/subscription/{subscriptionId}/grouptraining - skirtas įrašyti naują grupinę treniruotę į tam tikrą abonementą
+**GET** /api/subscription/{subscriptionId}/grouptraining/{id} - skirtas gauti unikalią grupinę treniruotę pagal unikalų abonementą
+**PUT** /api/subscription/{subscriptionId}/grouptraining/{id} - skirtas atnaujinti unikalaus abonemento unikalios grupinės treniruotės informaciją pagal ID
+**DELETE** /api/subscription/{subscriptionId}/grouptraining/{id} - skirtas ištrinti grupinę treniruotę pagal unikalų ID
+
+#### Group Training Feedback
+**GET** /api/subscription/{subscriptionId}/grouptraining/{grouptrainingId}/grouptrainingfeedback - skirtas gauti unikalios treniruotės atsiliepimus
+**POST** /api/subscription/{subscriptionId}/grouptraining/{grouptrainingId}/grouptrainingfeedback - skirtas įrašyti naują naują atsiliepimą unikalios treniruotės
+**GET** /api/subscription/{subscriptionId}/grouptraining//{grouptrainingId}/grouptrainingfeedback/{id} - skirtas gauti unikalios grupinės treniruotės unikalų atsiliepimą
+**PUT** /api/subscription/{subscriptionId}/grouptraining//{grouptrainingId}/grouptrainingfeedback/{id} - skirtas atnaujinti unikalios grupinės treniruotės unikalaus atsiliepimo informaciją
+**DELETE** /api/subscription/{subscriptionId}/grouptraining//{grouptrainingId}/grouptrainingfeedback/{id} - skirtas ištrinti unikalios grupinės treniruotės unikalų atsiliepwimą
+
+#### Auth
+**POST** /api/register - skirtas įrašyti naujos paskyros informaciją
+**POST** /api/login - skirtas vartotojo prisijungimui
